@@ -8,6 +8,7 @@ export type ActivePage = 'home' | 'products' | 'packages' | 'guides' | 'services
 export interface BusinessType {
   id: string;
   title: string;
+  subtitle?: string;
   description: string;
   icon: string;
   image: string;

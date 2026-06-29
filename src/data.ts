@@ -8,7 +8,8 @@ import { PricingPlan, BusinessType, PackageCategory, POSItem } from './types';
 export const BUSINESS_TYPES: BusinessType[] = [
   {
     id: 'sme',
-    title: 'SME ขนาดเล็ก - กลาง',
+    title: 'SME',
+    subtitle: 'ขนาดเล็ก - กลาง',
     description: 'ต้องการระบบที่ใช้งานง่าย ลงทุนต่ำ และช่วยวางรากฐานที่เป็นมาตรฐานสำหรับการบริหารธุรกิจ',
     icon: 'Store',
     image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80'
