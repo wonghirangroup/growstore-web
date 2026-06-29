@@ -59,35 +59,35 @@ export default function Footer({ setCurrentPage, language }: FooterProps) {
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <button 
-                  onClick={() => setCurrentPage('products')} 
+                <button
+                  onClick={() => setCurrentPage('products')}
                   className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
                 >
-                  {isTH ? 'สินค้าอาร์ดแวร์' : 'Hardware Products'}
+                  {isTH ? 'สินค้า' : 'Products'}
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => setCurrentPage('packages')} 
+                <button
+                  onClick={() => setCurrentPage('packages')}
                   className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
                 >
-                  {isTH ? 'แพ็คเกจราคา' : 'Pricing Plans'}
+                  {isTH ? 'แพ็กเกจ' : 'Packages'}
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => setCurrentPage('guides')} 
+                <button
+                  onClick={() => setCurrentPage('contact')}
                   className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
                 >
-                  {isTH ? 'คู่มือแนะนำระบบ' : 'Guides & Tutorials'}
+                  {isTH ? 'บริการ' : 'Services'}
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => setCurrentPage('pos-demo')} 
-                  className="text-slate-400 hover:text-emerald-400 font-semibold transition-colors cursor-pointer"
+                <button
+                  onClick={() => setCurrentPage('packages')}
+                  className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
                 >
-                  {isTH ? 'ทดลองระบบเดโม' : 'Try POS Terminal Demo'}
+                  {isTH ? 'โปรโมชั่น' : 'Promotions'}
                 </button>
               </li>
             </ul>
@@ -96,26 +96,16 @@ export default function Footer({ setCurrentPage, language }: FooterProps) {
           {/* Column 3: Services */}
           <div>
             <h3 className="text-white font-sans font-bold text-sm tracking-wider uppercase mb-4">
-              {isTH ? 'บริการของเรา' : 'Services'}
+              {isTH ? 'บริการ' : 'Services'}
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <button 
-                  onClick={() => setCurrentPage('guides')} 
+                <button
+                  onClick={() => setCurrentPage('guides')}
                   className="text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
                 >
-                  {isTH ? 'คู่มือการติดตั้ง' : 'Installation Guide'}
+                  {isTH ? 'คู่มือการใช้งาน' : 'User Guide'}
                 </button>
-              </li>
-              <li>
-                <a href="#line-support" className="text-slate-400 hover:text-blue-400 transition-colors">
-                  {isTH ? 'บริการซัพพอร์ต 24 ชม.' : '24/7 Tech Support'}
-                </a>
-              </li>
-              <li>
-                <a href="#api" className="text-slate-400 hover:text-blue-400 transition-colors">
-                  {isTH ? 'การเชื่อมต่อระบบ API' : 'API Integrations'}
-                </a>
               </li>
             </ul>
           </div>

@@ -11,6 +11,7 @@ import HomeView from './components/HomeView';
 import ProductsView from './components/ProductsView';
 import PackagesView from './components/PackagesView';
 import GuidesView from './components/GuidesView';
+import ServicesView from './components/ServicesView';
 import ContactView from './components/ContactView';
 import POSDemo from './components/POSDemo';
 import LoginModal from './components/LoginModal';
@@ -137,6 +138,18 @@ export default function App() {
               transition={{ duration: 0.25 }}
             >
               <GuidesView language={language} />
+            </motion.div>
+          )}
+
+          {currentPage === 'services' && (
+            <motion.div
+              key="services"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25 }}
+            >
+              <ServicesView language={language} />
             </motion.div>
           )}
 
