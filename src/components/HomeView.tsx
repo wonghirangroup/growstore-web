@@ -262,19 +262,31 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
           </div>
 
           {/* Carousel */}
-          <div className="flex items-center justify-center gap-4">
-
-            {/* Prev arrow */}
-            <button
-              onClick={() => setActivePlanIdx(p => Math.max(0, p - 1))}
-              disabled={activePlanIdx === 0}
-              className="flex-shrink-0 w-12 h-12 z-20 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition-all cursor-pointer"
-            >
-              <ChevronLeft className="w-5 h-5 text-[#EC6F44]" />
-            </button>
+          <div className="flex items-center justify-center">
 
             {/* Cards — flat carousel */}
             <div className="relative flex-1" style={{ height: '620px' }}>
+
+              {/* Prev arrow — absolute, left edge of active card */}
+              <button
+                onClick={() => setActivePlanIdx(p => Math.max(0, p - 1))}
+                disabled={activePlanIdx === 0}
+                className="absolute z-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition-all cursor-pointer"
+                style={{ left: 'calc(50% - 145px)', top: '50%', transform: 'translate(-50%, -50%)' }}
+              >
+                <ChevronLeft className="w-5 h-5 text-[#EC6F44]" />
+              </button>
+
+              {/* Next arrow — absolute, right edge of active card */}
+              <button
+                onClick={() => setActivePlanIdx(p => Math.min(PRICING_PLANS.length - 1, p + 1))}
+                disabled={activePlanIdx === PRICING_PLANS.length - 1}
+                className="absolute z-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition-all cursor-pointer"
+                style={{ left: 'calc(50% + 145px)', top: '50%', transform: 'translate(-50%, -50%)' }}
+              >
+                <ChevronRight className="w-5 h-5 text-[#EC6F44]" />
+              </button>
+
               {(() => {
                 const ACTIVE_W = 290, ADJ_W = 225, FAR_W = 175, GAP = 12;
                 const planColor: Record<string, string> = {
@@ -464,15 +476,6 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
                 });
               })()}
             </div>
-
-            {/* Next arrow */}
-            <button
-              onClick={() => setActivePlanIdx(p => Math.min(PRICING_PLANS.length - 1, p + 1))}
-              disabled={activePlanIdx === PRICING_PLANS.length - 1}
-              className="flex-shrink-0 w-12 h-12 z-20 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition-all cursor-pointer"
-            >
-              <ChevronRight className="w-5 h-5 text-[#EC6F44]" />
-            </button>
           </div>
 
           {/* Dots */}
