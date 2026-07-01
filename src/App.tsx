@@ -24,6 +24,7 @@ export default function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [demoPlan, setDemoPlan] = useState<string>('free');
   const [activeUser, setActiveUser] = useState<string | null>(null);
+  const [packageHighlight, setPackageHighlight] = useState<string>('m');
 
   // Success toast notice state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -97,7 +98,15 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25 }}
             >
-              <HomeView setCurrentPage={setCurrentPage} language={language} />
+              <HomeView
+                setCurrentPage={setCurrentPage}
+                language={language}
+                onSelectPackage={(planId) => {
+                  setPackageHighlight(planId);
+                  setCurrentPage('packages');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
             </motion.div>
           )}
 
@@ -121,10 +130,11 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25 }}
             >
-              <PackagesView 
-                language={language} 
-                setCurrentPage={setCurrentPage} 
-                onSetDemoPlan={handleSetDemoPlan} 
+              <PackagesView
+                language={language}
+                setCurrentPage={setCurrentPage}
+                onSetDemoPlan={handleSetDemoPlan}
+                initialHighlight={packageHighlight}
               />
             </motion.div>
           )}

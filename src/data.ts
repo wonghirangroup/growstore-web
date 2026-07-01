@@ -3,7 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PricingPlan, BusinessType, PackageCategory, POSItem } from './types';
+import { PricingPlan, BusinessType, PackageCategory, PackageFeature, POSItem } from './types';
+
+export const COMPARISON_ROWS: PackageFeature[] = [
+  { name: 'POS ขายหน้าร้าน (บิล/ต่อเดือน)', free: '300', s: '500', m: 'ไม่จำกัด', l: 'ไม่จำกัด', pro: 'ไม่จำกัด' },
+  { name: 'พักบิล / Clone บิล', free: true, s: true, m: true, l: true, pro: true },
+  { name: 'ยกเลิก / แก้ไขบิลย้อนหลัง', free: true, s: true, m: true, l: true, pro: true },
+  { name: 'คืน / เปลี่ยนสินค้า', free: false, s: false, m: true, l: true, pro: true },
+  { name: 'Offline Mode', free: true, s: true, m: true, l: true, pro: true },
+  { name: 'Sync หลายเครื่อง', free: false, s: false, m: true, l: true, pro: true },
+  { name: 'Customer Display', free: false, s: false, m: true, l: true, pro: true },
+  { name: 'Cash Drawer', free: true, s: true, m: true, l: true, pro: true },
+  { name: 'Saving Drawer', free: false, s: false, m: false, l: true, pro: true },
+  { name: 'ประวัติบิล & การแก้ไข', free: '1 เดือน', s: '1 ปี', m: 'ไม่จำกัด', l: 'ไม่จำกัด', pro: 'ไม่จำกัด' },
+];
 
 export const BUSINESS_TYPES: BusinessType[] = [
   {
@@ -119,47 +132,124 @@ export const PRICING_PLANS: PricingPlan[] = [
 
 export const PACKAGE_CATEGORIES: PackageCategory[] = [
   {
-    title: 'สินค้าและการจัดการทั่วไป',
+    title: 'สินค้า',
+    icon: 'Package',
     features: [
-      { name: 'POS ขายหน้าร้าน (บิล/ต่อเดือน)', free: '300', s: '500', m: 'ไม่จำกัด', l: 'ไม่จำกัด', pro: 'ไม่จำกัด' },
-      { name: 'พักบิล / Clone บิล', free: true, s: true, m: true, l: true, pro: true },
-      { name: 'ยกเลิก / แก้ไขบิลย้อนหลัง', free: true, s: true, m: true, l: true, pro: true },
-      { name: 'คืน / เปลี่ยนสินค้า', free: false, s: false, m: true, l: true, pro: true },
-      { name: 'โหมด Offline ทำงานแบบไม่มีเน็ต', free: true, s: true, m: true, l: true, pro: true },
-      { name: 'ซิงค์ข้อมูลหลายเครื่องเรียลไทม์', free: false, s: false, m: true, l: true, pro: true },
-      { name: 'จอแสดงผลฝั่งลูกค้า (Customer Display)', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'รหัสสินค้า / หลายบาร์โค้ด', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'หน่วยสินค้า', free: true, s: false, m: true, l: true, pro: true },
+      { name: 'แตกรวม / บรรจุภัณฑ์', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'Serial / Lot / Expiry', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'แจ้งเตือนเมื่อ หมดอายุ / ใกล้อายุ', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'Blacklist สินค้า', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'Import / Export Excel', free: true, s: true, m: true, l: true, pro: true },
     ]
   },
   {
     title: 'ราคา & โปรโมชั่น',
+    icon: 'Tag',
     features: [
-      { name: 'ตั้งราคาสินค้าหลายระดับ (ปลีก-ส่ง)', free: false, s: '2 ระดับ', m: '5 ระดับ', l: 'ไม่จำกัด', pro: 'ไม่จำกัด' },
-      { name: 'จัดเซ็ตโปรโมชั่น ซื้อคู่ถูกกว่า', free: false, s: false, m: true, l: true, pro: true },
-      { name: 'คูปองส่วนลด & แต้มสะสม', free: false, s: true, m: true, l: true, pro: true },
+      { name: 'ระดับราคา', free: '2 ราคา', s: '2 ราคา', m: true, l: true, pro: true },
+      { name: 'ราคาตามกลุ่มลูกค้า', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'ราคาตามสาขา / ช่องทาง', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'โปรโมชั่น (ส่วนลด/แถม)', free: '1 โปร', s: '5 โปร', m: true, l: true, pro: true },
+      { name: 'Coupon / Gift Card', free: false, s: false, m: false, l: true, pro: true },
     ]
   },
   {
-    title: 'คลังสินค้า (Inventory)',
+    title: 'คลังสินค้า',
+    icon: 'Store',
     features: [
-      { name: 'ระบบแจ้งเตือนสินค้าใกล้หมดสต็อก', free: true, s: true, m: true, l: true, pro: true },
-      { name: 'จัดการสต็อกแยกสาขา', free: false, s: false, m: '3 สาขา', l: '10 สาขา', pro: 'ไม่จำกัด' },
-      { name: 'รองรับการนำเข้า-ส่งออก Excel', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'ดูสต็อก', free: '100 SKU', s: '300 SKU', m: true, l: true, pro: true },
+      { name: 'โอนสินค้า / สต็อกสาขา', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'จองสส๊อก / แพ็คสินค้า', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'จัดการชั้นวาง / พาเหรด', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'FIFO / FILO', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'ประวัติการเคลื่อนไหว', free: 'นำเข้า', s:'นำเข้า', m: true, l: true, pro: true },
     ]
   },
   {
     title: 'ต้นทุน & กำไร',
+    icon: 'BarChart',
     features: [
-      { name: 'รายงานคำนวณต้นทุนเฉลี่ย (FIFO/LIFO)', free: false, s: true, m: true, l: true, pro: true },
-      { name: 'สรุปยอดขายและกำไรสุทธิรายวัน/เดือน', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'ประวัติต้นทุน / ย้อนหลัง', free: '100 SKU', s: '300 SKU', m: true, l: true, pro: true },
+      { name: 'FIFO / ราคาเฉลี่ย', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'ต้นทุน ณ บิลขาย', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'กำไรต่อบิล / ต่อสินค้า', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'กำไรสุทธิ', free: false, s: false, m: true, l: true, pro: true },
     ]
   },
   {
-    title: 'BI & AI อัจฉริยะ',
+    title: 'ลูกค้า & สมาชิก',
+    icon: 'Users',
     features: [
-      { name: 'AI วิเคราะห์ยอดขายและคาดการณ์สินค้าขายดี', free: false, s: false, m: false, l: true, pro: true },
-      { name: 'Dashboard สรุปผลภาพรวมแบบ Interactive', free: 'พื้นฐาน', s: 'พื้นฐาน', m: 'ระดับสูง', l: 'ระดับสูง', pro: 'ระดับสูง' },
+      { name: 'ข้อมูลลูกค้า / โปรไฟล์', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'Tier / คะแนนสมาชิก', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'เครดิตเทอม / วันเกิด', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'Blacklist ลูกค้า', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'QR ลูกค้า', free: false, s: false, m: true, l: true, pro: true },
     ]
-  }
+  },
+  {
+    title: 'การชำระเงิน',
+    icon: 'CreditCard',
+    features: [
+      { name: 'เงินสด / โอน / QR / บัตร', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'ส่วนลด / Refund', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'ประวัติการชำระเงิน', free: '3 เดือน', s: '1 ปี', m: true, l: true, pro: true },
+    ]
+  },
+  {
+    title: 'จัดซื้อ',
+    icon: 'ShoppingCart',
+    features: [
+      { name: 'ใบสั่งซื้อ (PO)', free: '10 ใบ', s: '20 ใบ', m: true, l: true, pro: true },
+      { name: 'ใบรับซื้อ (PR)', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'ใบส่งคืน (GR)', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'แคตตาล็อกซัพพลายเออร์', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'Credit Term & ประเมิน Supplier', free: false, s: false, m: true, l: true, pro: true },
+    ]
+  },
+  {
+    title: 'B2B & การเงิน',
+    icon: 'Briefcase',
+    features: [
+      { name: 'ใบแสดงราคา / SO / DO', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'ใบแจ้งหนี้ B2B', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'AP / AR', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'e-Tax Invoice / ภาษีหลายอัตรา', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'รายงานภาษี', free: false, s: false, m: true, l: true, pro: true },
+    ]
+  },
+  {
+    title: 'ผู้ใช้ & สาขา',
+    icon: 'UserCheck',
+    features: [
+      { name: 'จำนวน User', free: '5 คน', s: '10 คน', m: '20 คน', l: '50 คน', pro: '200 คน' },
+      { name: 'ผู้ใช้หลายคน (Admin)', free: '1 คน', s: '1 คน', m: '1 คน', l: '4 คน', pro: '8 คน' },
+      { name: 'Role / Permission', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'สิทธิ์ตามสาขา / 2FA', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'หลายสาขา / แยกราคาต่อราคา', free: false, s: false, m: false, l: true, pro: true },
+    ]
+  },
+  {
+    title: 'Audit & Log',
+    icon: 'Shield',
+    features: [
+      { name: 'Login/Logout / Change History', free: '3 เดือน', s: '1 ปี', m: true, l: true, pro: true },
+      { name: 'Tamper-proof Log', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'All Log / Data Export Log', free: '3 เดือน', s: '1 ปี', m: true, l: true, pro: true },
+    ]
+  },
+  {
+    title: 'BI & AI',
+    icon: 'TrendingUp',
+    features: [
+      { name: 'รายงานกราฟ', free: true, s: true, m: true, l: true, pro: true },
+      { name: 'วิเคราะห์ยอดขาย', free: false, s: false, m: true, l: true, pro: true },
+      { name: 'AI คาดการณ์ยอดขาย', free: false, s: false, m: false, l: true, pro: true },
+      { name: 'AI ตรวจจับการโกง', free: false, s: false, m: false, l: true, pro: true },
+    ]
+  },
 ];
 
 export const DEMO_PRODUCTS: POSItem[] = [

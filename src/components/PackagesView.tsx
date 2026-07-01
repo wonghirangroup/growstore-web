@@ -3,36 +3,57 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
-import { PRICING_PLANS, PACKAGE_CATEGORIES } from '../data';
-import { 
-  Check, 
-  X, 
-  ChevronDown, 
-  ChevronUp, 
-  QrCode, 
-  CreditCard, 
-  Upload, 
-  ArrowRight, 
-  MessageCircle, 
-  Sparkles, 
-  ShieldCheck, 
+import React, { useState, useRef } from 'react';
+import { ActivePage } from '../types';
+import imgE1 from '../../images/e1.png';
+import imgE2 from '../../images/e2.png';
+import imgE3 from '../../images/e3.png';
+import imgE4 from '../../images/e4.png';
+import imgE5 from '../../images/e5.png';
+import { PRICING_PLANS, PACKAGE_CATEGORIES, COMPARISON_ROWS } from '../data';
+import {
+  Check,
+  X,
+  ChevronDown,
+  ChevronUp,
+
+  QrCode,
+  Upload,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
   Award,
-  CircleDot
+  Package,
+  Tag,
+  Store,
+  BarChart2,
+  Users,
+  CreditCard,
+  ShoppingCart,
+  Briefcase,
+  UserCheck,
+  Shield,
+  TrendingUp,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PackagesViewProps {
   language: 'TH' | 'EN';
-  setCurrentPage: (page: string) => void;
+  setCurrentPage: (page: ActivePage) => void;
   onSetDemoPlan: (plan: string) => void;
+  initialHighlight?: string;
 }
 
-export default function PackagesView({ language, setCurrentPage, onSetDemoPlan }: PackagesViewProps) {
+export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, initialHighlight }: PackagesViewProps) {
   const isTH = language === 'TH';
 
+  const initialIdx = PRICING_PLANS.findIndex(p => p.id === (initialHighlight ?? 'm'));
+  const [activePlanIdx, setActivePlanIdx] = useState(initialIdx >= 0 ? initialIdx : 2);
+
   // State for expanded accordions
-  const [expandedIndices, setExpandedIndices] = useState<number[]>([0]);
+  const [expandedIndices, setExpandedIndices] = useState<number[]>([]);
+  const [highlightedPlanId, setHighlightedPlanId] = useState<string | null>(initialHighlight ?? 'm');
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const toggleAccordion = (idx: number) => {
     if (expandedIndices.includes(idx)) {
@@ -53,14 +74,6 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan }
 
   const selectedPlan = PRICING_PLANS.find(p => p.id === selectedPlanId) || PRICING_PLANS[2];
 
-  const handleStartSim = (planId: 'free' | 's' | 'm' | 'l' | 'pro') => {
-    setSelectedPlanId(planId);
-    setSimStep(1);
-    setShowSim(true);
-    setStoreName('');
-    setStorePhone('');
-    setSlipUploaded(false);
-  };
 
   const handleNextStep = () => {
     if (simStep === 1) {
@@ -92,254 +105,360 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan }
   };
 
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-4">
       
-      {/* 1. Pricing Plan Cards Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">
-            Pricing & Packages
-          </span>
-          <h1 className="text-3xl font-sans font-extrabold text-slate-900 tracking-tight leading-tight">
-            {isTH ? 'แพ็คเกจค่าบริการและฟังก์ชันระบบ' : 'GrowStore POS Subscription Packages'}
-          </h1>
-          <p className="text-slate-500 text-sm">
-            {isTH ? 'เลือกแผนที่คุณต้องการ เริ่มต้นขายของ จัดการบัญชีหลังบ้านอย่างสะดวกรวดเร็ว' : 'Select your tier, scale up seamlessly.'}
-          </p>
-        </div>
+      {/* 1. Pricing Carousel */}
+      <section className="pt-8 pb-16 bg-slate-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-stretch">
-          {PRICING_PLANS.map((plan) => {
-            const isPopular = plan.popular;
-            return (
-              <div 
-                key={plan.id}
-                className={`bg-white rounded-2xl border flex flex-col justify-between transition-all relative ${
-                  isPopular 
-                    ? 'border-blue-500 shadow-xl scale-102 z-10' 
-                    : 'border-slate-200/80 hover:border-slate-300 shadow-sm'
-                }`}
-              >
-                {isPopular && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md animate-pulse">
-                    {isTH ? 'ยอดนิยม' : 'Popular'}
-                  </div>
-                )}
-
-                {/* Card Top */}
-                <div className="p-6 border-b border-slate-50 space-y-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest block">GrowStore</span>
-                    <h3 className="text-lg font-bold font-sans text-slate-900 leading-none">{plan.name}</h3>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <span className="text-3xl font-sans font-black text-slate-900">
-                      {plan.price === 0 ? '0' : plan.price.toLocaleString()}
-                    </span>
-                    <span className="text-xs font-bold text-slate-400 ml-1">฿ / {isTH ? 'เดือน' : 'mo'}</span>
-                    <p className="text-[10px] text-slate-400 font-semibold mt-1">{plan.period}</p>
-                  </div>
-                </div>
-
-                {/* Features checklist snippet */}
-                <div className="p-6 bg-slate-50/50 flex-1 space-y-3 border-b border-slate-50">
-                  {plan.features.slice(0, 5).map((feat, idx) => (
-                    <div key={idx} className="flex items-start space-x-2 text-xs font-semibold">
-                      {feat.available ? (
-                        <Check className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      )}
-                      <span className={feat.available ? 'text-slate-700' : 'text-slate-400 line-through'}>
-                        {feat.text}
-                      </span>
-                    </div>
-                  ))}
-                  <p className="text-[10px] text-blue-600 font-bold mt-2">
-                    {isTH ? '+ ดูตารางฟีเจอร์ด้านล่าง' : '+ See more below'}
-                  </p>
-                </div>
-
-                {/* CTA Button */}
-                <div className="p-4 bg-white rounded-b-2xl">
-                  <button
-                    onClick={() => handleStartSim(plan.id)}
-                    className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      isPopular 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-100' 
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    {isTH ? 'สมัคร / ซื้อแพ็คเกจ' : 'Buy Package'}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 2. Detailed Features Comparison Accordion (Image 4 bottom) */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <h2 className="text-2xl font-sans font-black text-slate-900 tracking-tight">
-            {isTH ? 'ตารางเปรียบเทียบฟังก์ชันการทำงานหลัก' : 'Detailed Module Comparison Table'}
-          </h2>
-          <p className="text-slate-500 text-xs">
-            {isTH ? 'คลิกที่หัวข้อเพื่อเปิดดูขีดความสามารถของแต่ละโมดูลอย่างครบถ้วน' : 'Expand topics to inspect parameters.'}
-          </p>
-        </div>
-
-        {/* Accordions */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden divide-y divide-slate-100">
-          {PACKAGE_CATEGORIES.map((category, catIdx) => {
-            const isExpanded = expandedIndices.includes(catIdx);
-            return (
-              <div key={catIdx} className="overflow-hidden">
-                {/* Header bar */}
-                <button
-                  onClick={() => toggleAccordion(catIdx)}
-                  className="w-full flex justify-between items-center p-5 bg-slate-50/50 hover:bg-slate-50 transition-colors text-left cursor-pointer font-bold text-sm text-slate-800"
-                >
-                  <span className="flex items-center space-x-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                    <span>{category.title}</span>
-                  </span>
-                  {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
-                </button>
-
-                {/* Drawer Contents */}
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-x-auto"
-                    >
-                      <table className="w-full text-left border-collapse min-w-[600px] text-xs">
-                        <thead>
-                          <tr className="bg-slate-100/40 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                            <th className="py-3 px-5 w-2/5">{isTH ? 'ฟีเจอร์การทำงาน' : 'Core Feature'}</th>
-                            <th className="py-3 px-3 text-center">ฟรี</th>
-                            <th className="py-3 px-3 text-center">S</th>
-                            <th className="py-3 px-3 text-center">M</th>
-                            <th className="py-3 px-3 text-center">L</th>
-                            <th className="py-3 px-3 text-center">Pro</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50 font-semibold text-slate-700">
-                          {category.features.map((feat, featIdx) => (
-                            <tr key={featIdx} className="hover:bg-slate-50/30">
-                              <td className="py-3 px-5 text-slate-800">{feat.name}</td>
-                              
-                              {/* Free col */}
-                              <td className="py-3 px-3 text-center">
-                                {typeof feat.free === 'boolean' ? (
-                                  feat.free ? <Check className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-red-400 mx-auto" />
-                                ) : <span className="text-slate-600">{feat.free}</span>}
-                              </td>
-
-                              {/* S col */}
-                              <td className="py-3 px-3 text-center">
-                                {typeof feat.s === 'boolean' ? (
-                                  feat.s ? <Check className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-red-400 mx-auto" />
-                                ) : <span className="text-slate-600">{feat.s}</span>}
-                              </td>
-
-                              {/* M col */}
-                              <td className="py-3 px-3 text-center">
-                                {typeof feat.m === 'boolean' ? (
-                                  feat.m ? <Check className="w-4 h-4 text-emerald-500 mx-auto font-black" /> : <X className="w-4 h-4 text-red-400 mx-auto" />
-                                ) : <span className="text-blue-600 font-bold">{feat.m}</span>}
-                              </td>
-
-                              {/* L col */}
-                              <td className="py-3 px-3 text-center">
-                                {typeof feat.l === 'boolean' ? (
-                                  feat.l ? <Check className="w-4 h-4 text-emerald-500 mx-auto font-black" /> : <X className="w-4 h-4 text-red-400 mx-auto" />
-                                ) : <span className="text-blue-600 font-bold">{feat.l}</span>}
-                              </td>
-
-                              {/* Pro col */}
-                              <td className="py-3 px-3 text-center">
-                                {typeof feat.pro === 'boolean' ? (
-                                  feat.pro ? <Check className="w-4 h-4 text-emerald-500 mx-auto font-black" /> : <X className="w-4 h-4 text-red-400 mx-auto" />
-                                ) : <span className="text-purple-600 font-extrabold">{feat.pro}</span>}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 3. วิธีการสั่งซื้อ (How to Order - Static Guidelines) */}
-      <section className="bg-slate-50 py-16" id="order-guide-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-sans font-black text-slate-900 tracking-tight">
-              {isTH ? 'ขั้นตอนการลงทะเบียนสั่งซื้อ' : 'Standard Ordering Instructions'}
+          <div className="text-center mb-2">
+            <h2 className="text-4xl font-extrabold text-[#2DA6DD]">
+              {isTH ? 'แพ็คเกจ' : 'Packages'}
             </h2>
-            <p className="text-slate-500 text-sm">
-              {isTH ? 'ทำธุรกรรมเสร็จสิ้นและเปิดเครื่องเข้าใช้งานได้รวดเร็วใน 5 ขั้นตอนหลัก' : 'Follow these simple stages to complete your activation.'}
+            <p className="text-slate-500 mt-2 font-medium text-sm">
+              {isTH ? 'เลือกแผนของคุณ' : 'Choose Your Plan'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-center">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-xs relative">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs">
-                1
-              </span>
-              <div className="text-2xl mt-4">💬</div>
-              <h3 className="font-bold text-xs text-slate-800 mt-2">{isTH ? 'แอดไลน์พนักงาน' : 'Add Line Support'}</h3>
-              <p className="text-[10px] text-slate-400 mt-1">{isTH ? 'แอด @Growstore แจ้งความประสงค์สั่งซื้อ' : 'Contact staff and inform the selected tier'}</p>
-            </div>
+          {(() => {
+            const planColor: Record<string, string> = {
+              free: 'text-slate-400', s: 'text-orange-400',
+              m: 'text-[#2DA6DD]', l: 'text-red-400', pro: 'text-purple-400',
+            };
+            const planShadow: Record<string, string> = {
+              free: '0 16px 48px rgba(148,163,184,0.55)',
+              s: '0 16px 48px rgba(251,146,60,0.55)',
+              m: '0 16px 48px rgba(45,166,221,0.55)',
+              l: '0 16px 48px rgba(248,113,113,0.55)',
+              pro: '0 16px 48px rgba(192,132,252,0.55)',
+            };
+            const gradientMap: Record<string, string> = {
+              m: 'linear-gradient(160deg, #2DA6DD, #2F45AB)',
+              s: 'linear-gradient(160deg, #FAFE8C, #C36345)',
+              l: 'linear-gradient(160deg, #CA3F42, #E37633)',
+              pro: 'linear-gradient(160deg, #6A6ED2, #E33368)',
+            };
+            return (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
+                {PRICING_PLANS.map((plan, idx) => {
+                  const isActive = idx === activePlanIdx;
+                  const boolFeatures = plan.features.slice(0, plan.features.length - 1);
+                  const lastFeature = plan.features[plan.features.length - 1];
+                  const letterStyle = gradientMap[plan.id] ? {
+                    background: gradientMap[plan.id],
+                    WebkitBackgroundClip: 'text' as const,
+                    WebkitTextFillColor: 'transparent' as const,
+                    backgroundClip: 'text' as const,
+                  } : {};
+                  return (
+                    <motion.div
+                      key={plan.id}
+                      onClick={() => setActivePlanIdx(idx)}
+                      animate={{ boxShadow: isActive ? planShadow[plan.id] : '0 2px 8px rgba(0,0,0,0.08)', scale: isActive ? 1.03 : 1 }}
+                      transition={{ duration: 0.25, ease: 'easeOut' }}
+                      className="rounded-2xl overflow-hidden cursor-pointer flex flex-col"
+                    >
+                      {/* Badge */}
+                      {plan.id === 'm' && (
+                        <div className="bg-[#2DA6DD] text-white text-[10px] font-bold text-center py-1.5">
+                          {isTH ? 'ยอดนิยม' : 'Most Popular'}
+                        </div>
+                      )}
+                      {(plan.id === 'l' || plan.id === 'pro') && (
+                        <div className="bg-[#EC6F44] text-white text-[10px] font-bold text-center py-1.5">
+                          {isTH ? 'ครบทุกฟีเจอร์' : 'Full Features'}
+                        </div>
+                      )}
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-xs relative">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs">
-                2
-              </span>
-              <div className="text-2xl mt-4">📋</div>
-              <h3 className="font-bold text-xs text-slate-800 mt-2">{isTH ? 'เลือกแพ็คเกจที่เหมาะสม' : 'Select Package'}</h3>
-              <p className="text-[10px] text-slate-400 mt-1">{isTH ? 'ระบุสเกลร้านและแพ็คเกจที่จะเปิดใช้' : 'Specify parameters and checkout details'}</p>
-            </div>
+                      {/* Header */}
+                      <div className={`bg-[#131C45] px-4 pb-4 text-center ${plan.id === 'free' || plan.id === 's' ? 'pt-8' : 'pt-5'}`}>
+                        <div className={`font-black text-5xl leading-none mb-2 ${!gradientMap[plan.id] ? planColor[plan.id] : ''}`} style={letterStyle}>
+                          {plan.name}
+                        </div>
+                        <div>
+                          <span className="font-black text-white text-lg">{plan.price === 0 ? (isTH ? 'ฟรี' : 'Free') : plan.price.toLocaleString()}</span>
+                          <span className="text-white text-xs font-semibold ml-1">{plan.price === 0 ? (isTH ? '/เดือน' : 'forever') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
+                        </div>
+                      </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-xs relative">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs">
-                3
-              </span>
-              <div className="text-2xl mt-4">💸</div>
-              <h3 className="font-bold text-xs text-slate-800 mt-2">{isTH ? 'ชำระค่าธรรมเนียม' : 'Transfer Money'}</h3>
-              <p className="text-[10px] text-slate-400 mt-1">{isTH ? 'โอนเข้าเลขบัญชีบริษัทออฟฟิเชียล' : 'Official bank account transaction'}</p>
-            </div>
+                      {/* Features */}
+                      <div className="bg-white px-4 pt-4 pb-4 flex flex-col gap-2 flex-1">
+                        {boolFeatures.slice(0, 6).map((feat, fIdx) => (
+                          <div key={fIdx} className="flex items-center gap-2">
+                            <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${feat.available ? 'bg-[#2DA6DD]' : 'bg-red-500'}`}>
+                              {feat.available ? <Check className="w-3 h-3 text-white" /> : <X className="w-3 h-3 text-white" />}
+                            </div>
+                            <span className="text-[11px] text-slate-700 leading-tight">{feat.text}</span>
+                          </div>
+                        ))}
+                        {lastFeature && (
+                          <div className="flex items-center gap-1.5 text-slate-500 text-[11px] pl-0.5">
+                            <span className="text-sm leading-none">•</span>
+                            <span>{lastFeature.text}</span>
+                          </div>
+                        )}
+                        <button
+                          onClick={e => {
+                            e.stopPropagation();
+                            setActivePlanIdx(idx);
+                            setHighlightedPlanId(plan.id);
+                            setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+                          }}
+                          className="mt-auto w-full py-2.5 rounded-xl bg-[#EC6F44] hover:bg-orange-500 text-white font-bold text-sm transition-colors cursor-pointer"
+                        >
+                          {isTH ? 'รายละเอียด' : 'Details'}
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+        </div>
+      </section>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-xs relative">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs">
-                4
-              </span>
-              <div className="text-2xl mt-4">📁</div>
-              <h3 className="font-bold text-xs text-slate-800 mt-2">{isTH ? 'ส่งสลิปเพื่อตรวจสอบ' : 'Send Slip'}</h3>
-              <p className="text-[10px] text-slate-400 mt-1">{isTH ? 'ส่งหลักฐานโอนเงินและข้อมูลร้านค้า' : 'Upload proof of payment to system'}</p>
-            </div>
+      {/* 2. Feature Comparison Table */}
+      <section ref={tableRef} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-xs relative">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs">
-                5
-              </span>
-              <div className="text-2xl mt-4">🚀</div>
-              <h3 className="font-bold text-xs text-slate-800 mt-2">{isTH ? 'รับแอคเคาท์ระบบ POS' : 'Activate Terminal'}</h3>
-              <p className="text-[10px] text-slate-400 mt-1">{isTH ? 'รับรหัสล็อกอินและเริ่มติดตั้งหน้าร้าน' : 'Receive activation credential keys'}</p>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight" style={{ color: '#2DA6DD' }}>
+            {isTH ? 'ตารางเปรียบเทียบฟังก์ชันการทำงานหลัก' : 'Feature Comparison Table'}
+          </h2>
+          <p className="text-slate-500 text-sm mt-2">
+            {isTH ? 'คลิกที่หัวข้อเพื่อเปิดดูขีดความสามารถของแต่ละโมดูลอย่างครบถ้วน' : 'Click a category header to expand and view all capabilities.'}
+          </p>
+        </div>
+
+        {(() => {
+          const gradientMap: Record<string, string> = {
+            m: 'linear-gradient(160deg, #2DA6DD, #2F45AB)',
+            s: 'linear-gradient(160deg, #FAFE8C, #C36345)',
+            l: 'linear-gradient(160deg, #CA3F42, #E37633)',
+            pro: 'linear-gradient(160deg, #6A6ED2, #E33368)',
+          };
+          const planAccentColor: Record<string, string> = {
+            free: '#94A3B8', s: '#FB923C', m: '#2DA6DD', l: '#F87171', pro: '#C084FC',
+          };
+          const planCellRgba: Record<string, string> = {
+            free: 'rgba(148,163,184,0.15)', s: 'rgba(251,146,60,0.15)',
+            m: 'rgba(45,166,221,0.15)', l: 'rgba(248,113,113,0.15)', pro: 'rgba(192,132,252,0.15)',
+          };
+          const hlCell = (id: string) => highlightedPlanId === id ? { backgroundColor: planCellRgba[id] } : {};
+          const catIconMap: Record<string, React.ReactElement> = {
+            Package: <Package className="w-4 h-4" />,
+            Tag: <Tag className="w-4 h-4" />,
+            Store: <Store className="w-4 h-4" />,
+            BarChart: <BarChart2 className="w-4 h-4" />,
+            Users: <Users className="w-4 h-4" />,
+            CreditCard: <CreditCard className="w-4 h-4" />,
+            ShoppingCart: <ShoppingCart className="w-4 h-4" />,
+            Briefcase: <Briefcase className="w-4 h-4" />,
+            UserCheck: <UserCheck className="w-4 h-4" />,
+            Shield: <Shield className="w-4 h-4" />,
+            TrendingUp: <TrendingUp className="w-4 h-4" />,
+          };
+
+          const renderCell = (val: string | boolean) => {
+            if (typeof val === 'boolean') {
+              return val
+                ? <Check className="w-4 h-4 text-[#2DA6DD] mx-auto" />
+                : <span className="text-slate-300 font-bold text-base mx-auto block text-center leading-none">–</span>;
+            }
+            return <span className="text-xs font-semibold text-slate-700">{val}</span>;
+          };
+
+          return (
+            <div>
+              {/* Badges in-flow — sits directly above table, no gap */}
+              <div className="flex rounded-t-xl overflow-hidden" style={{ marginLeft: '60.4%' }}>
+                <div className="flex-1 bg-[#2DA6DD] text-white text-[10px] font-bold text-center py-2">
+                  {isTH ? 'ยอดนิยม' : 'Most Popular'}
+                </div>
+                <div className="flex-[2] bg-[#EC6F44] text-white text-[10px] font-bold text-center py-2">
+                  {isTH ? 'ฟีเจอร์ครบทั้งหมด' : 'Full Features'}
+                </div>
+              </div>
+
+              <div className="overflow-x-auto rounded-tl-2xl rounded-bl-2xl rounded-br-2xl border border-slate-200 shadow-sm">
+              <table className="w-full border-collapse text-xs min-w-[640px]" style={{ tableLayout: 'fixed' }}>
+                <thead>
+                  <tr>
+                    <th className="bg-[#2DA6DD] text-white text-xl font-bold px-5 py-4 text-center align-middle" style={{ width: '34%' }}>
+                      {isTH ? 'แพ็คเกจ' : 'Package'}
+                    </th>
+                    {PRICING_PLANS.map(plan => {
+                      const letterStyle = gradientMap[plan.id] ? {
+                        background: gradientMap[plan.id],
+                        WebkitBackgroundClip: 'text' as const,
+                        WebkitTextFillColor: 'transparent' as const,
+                        backgroundClip: 'text' as const,
+                      } : {};
+                      const isHL = highlightedPlanId === plan.id;
+                      return (
+                        <th key={plan.id} className="px-3 py-4 text-center transition-colors duration-300" style={{ backgroundColor: isHL ? planAccentColor[plan.id] : '#131C45' }}>
+                          <div className={`font-black text-3xl leading-none ${plan.id === 'free' ? 'text-white' : ''}`} style={letterStyle}>
+                            {plan.name}
+                          </div>
+                          <div className="text-white text-xs font-semibold mt-1.5">
+                            {plan.price === 0 ? 'ฟรี/เดือน' : `${plan.price.toLocaleString()} บาท/เดือน`}
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {/* ── Flat comparison rows ── */}
+                  {COMPARISON_ROWS.map((feat, idx) => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}>
+                      <td className="px-5 py-3 text-slate-800 font-medium">{feat.name}</td>
+                      <td className="px-3 py-3 text-center" style={hlCell('free')}>{renderCell(feat.free)}</td>
+                      <td className="px-3 py-3 text-center" style={hlCell('s')}>{renderCell(feat.s)}</td>
+                      <td className="px-3 py-3 text-center" style={hlCell('m')}>{renderCell(feat.m)}</td>
+                      <td className="px-3 py-3 text-center" style={hlCell('l')}>{renderCell(feat.l)}</td>
+                      <td className="px-3 py-3 text-center" style={hlCell('pro')}>{renderCell(feat.pro)}</td>
+                    </tr>
+                  ))}
+
+                  {/* ── Accordion categories ── */}
+                  {PACKAGE_CATEGORIES.map((category, catIdx) => {
+                    const isExpanded = expandedIndices.includes(catIdx);
+                    return (
+                      <>
+                        {/* Category header row */}
+                        <tr key={`cat-${catIdx}`}>
+                          <td colSpan={6} className="p-0">
+                            <button
+                              onClick={() => toggleAccordion(catIdx)}
+                              className="w-full flex items-center justify-between px-5 py-4 bg-[#131C45] text-white cursor-pointer hover:bg-[#1a2558] transition-colors"
+                            >
+                              <span className="flex items-center gap-2 font-bold text-sm">
+                                {category.icon && catIconMap[category.icon]}
+                                {category.title}
+                              </span>
+                              {isExpanded
+                                ? <ChevronUp className="w-4 h-4 text-slate-400" />
+                                : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                            </button>
+                          </td>
+                        </tr>
+
+                        {/* Expanded feature rows */}
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.tr
+                              key={`cat-rows-${catIdx}`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.15, ease: 'easeInOut' }}
+                              style={{ display: 'contents' }}
+                            >
+                              {category.features.map((feat, featIdx) => (
+                                <tr
+                                  key={`feat-${catIdx}-${featIdx}`}
+                                  className={featIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}
+                                >
+                                  <td className="px-5 py-3 text-slate-800 font-medium">{feat.name}</td>
+                                  <td className="px-3 py-3 text-center" style={hlCell('free')}>{renderCell(feat.free)}</td>
+                                  <td className="px-3 py-3 text-center" style={hlCell('s')}>{renderCell(feat.s)}</td>
+                                  <td className="px-3 py-3 text-center" style={hlCell('m')}>{renderCell(feat.m)}</td>
+                                  <td className="px-3 py-3 text-center" style={hlCell('l')}>{renderCell(feat.l)}</td>
+                                  <td className="px-3 py-3 text-center" style={hlCell('pro')}>{renderCell(feat.pro)}</td>
+                                </tr>
+                              ))}
+                            </motion.tr>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+              </div>
             </div>
+          );
+        })()}
+      </section>
+
+      {/* 3. วิธีการสั่งซื้อ */}
+      <section className="bg-[#131C45] py-16" id="order-guide-section">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <h2 className="text-3xl sm:text-4xl font-black text-white text-center mb-14 tracking-tight">
+            {isTH ? 'วิธีการสั่งซื้อ' : 'How to Order'}
+          </h2>
+
+          {/* Row 1: Steps 1–3 */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+            {[
+              {
+                n: 1, img: imgE1,
+                title: isTH ? 'ขั้นตอนที่ 1' : 'Step 1',
+                desc: isTH ? 'กดที่ปุ่ม "สนใจติดต่อ" หรือ\nเพิ่มเพื่อนทางไลน์ @growstore' : 'Tap "Contact Us" or add LINE @growstore',
+              },
+              {
+                n: 2, img: imgE2,
+                title: isTH ? 'ขั้นตอนที่ 2' : 'Step 2',
+                desc: isTH ? 'เลือกแพ็คเกจที่ต้องการใช้งาน' : 'Choose the package you need',
+              },
+              {
+                n: 3, img: imgE3,
+                title: isTH ? 'ขั้นตอนที่ 3' : 'Step 3',
+                desc: isTH ? 'โอนเงินชำระค่าบริการตาม\nแพ็คเกจที่เลือก' : 'Transfer payment for selected package',
+              },
+            ].map(step => (
+              <div key={step.n} className="text-center">
+                <div className="bg-white rounded-2xl overflow-hidden mb-4 mx-auto" style={{ width: 250, height: 200 }}>
+                  <img src={step.img} alt={step.title} className="w-full h-full object-cover" />
+                </div>
+                <p className="text-white font-bold text-lg">{step.title}</p>
+                <p className="text-slate-400 text-sm mt-1 whitespace-pre-line">{step.desc}</p>
+              </div>
+            ))}
           </div>
+
+          {/* Row 2: Steps 4–5 centered */}
+          <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto mb-14">
+            {[
+              {
+                n: 4, img: imgE4,
+                title: isTH ? 'ขั้นตอนที่ 4' : 'Step 4',
+                desc: isTH ? 'ส่งหลักฐานการโอน' : 'Send proof of transfer',
+              },
+              {
+                n: 5, img: imgE5,
+                title: isTH ? 'ขั้นตอนที่ 5' : 'Step 5',
+                desc: isTH ? 'ได้รับ Account จาก Growstore' : 'Receive your Growstore Account',
+              },
+            ].map(step => (
+              <div key={step.n} className="text-center">
+                <div className="bg-white rounded-2xl overflow-hidden mb-4 mx-auto" style={{ width: 250, height: 200 }}>
+                  <img src={step.img} alt={step.title} className="w-full h-full object-cover" />
+                </div>
+                <p className="text-white font-bold text-lg">{step.title}</p>
+                <p className="text-slate-400 text-sm mt-1">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* LINE CTA button */}
+          <div className="flex justify-center">
+            <a
+              href="https://line.me/R/ti/p/@growstore"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-[#06C755] hover:bg-[#05b34d] transition-colors text-white font-bold text-xl px-12 py-4 shadow-lg" style={{ borderRadius: 15 }}
+            >
+              <svg viewBox="0 0 24 24" className="w-7 h-7" fill="currentColor">
+                <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+              </svg>
+              {isTH ? 'สนใจติดต่อ' : 'Contact Us'}
+            </a>
+          </div>
+
         </div>
       </section>
 

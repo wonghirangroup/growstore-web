@@ -25,6 +25,7 @@ export interface PackageFeature {
 
 export interface PackageCategory {
   title: string;
+  icon?: string;
   features: PackageFeature[];
 }
 

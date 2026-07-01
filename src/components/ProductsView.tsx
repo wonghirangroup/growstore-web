@@ -4,12 +4,13 @@
  */
 
 import { useState } from 'react';
+import { ActivePage } from '../types';
 import { Check, Info, Shield, ShoppingCart, Video, MessageCircle, HelpCircle, Truck, PackageCheck, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ProductsViewProps {
   language: 'TH' | 'EN';
-  setCurrentPage: (page: string) => void;
+  setCurrentPage: (page: ActivePage) => void;
 }
 
 export default function ProductsView({ language, setCurrentPage }: ProductsViewProps) {

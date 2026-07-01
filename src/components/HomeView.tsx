@@ -14,6 +14,13 @@ import imgB1 from '../../images/B1.png';
 import imgB2 from '../../images/B2.png';
 import imgB3 from '../../images/B3.png';
 import imgB4 from '../../images/B4.png';
+import imgS1 from '../../images/s1.png';
+import imgS2 from '../../images/s2.png';
+import imgS3 from '../../images/s3.png';
+import imgF1 from '../../images/f1.png';
+import imgF2 from '../../images/f2.png';
+import imgF3 from '../../images/f3.png';
+import imgF4 from '../../images/f4.png';
 import {
   ChevronRight,
   ChevronLeft,
@@ -21,8 +28,6 @@ import {
   Check,
   X,
   Monitor,
-  Smartphone,
-  Tablet,
   Package,
   Store,
   ShoppingBag,
@@ -32,9 +37,10 @@ import {
 interface HomeViewProps {
   setCurrentPage: (page: ActivePage) => void;
   language: 'TH' | 'EN';
+  onSelectPackage: (planId: string) => void;
 }
 
-export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
+export default function HomeView({ setCurrentPage, language, onSelectPackage }: HomeViewProps) {
   const isTH = language === 'TH';
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -100,12 +106,12 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
             className="relative w-full"
           >
             {/* ทุก slide ใช้สัดส่วน 1920x600 */}
-            <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1920/600' }}>
+            <div className="relative w-full overflow-hidden" style={{ height: 'clamp(480px, 31.25vw, 680px)' }}>
               {slides[currentSlide].image ? (
                 <img
                   src={slides[currentSlide].image}
                   alt="GrowStore Banner"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
                 />
               ) : (
                 <div className="absolute inset-0 bg-slate-50 flex items-center justify-center">
@@ -270,7 +276,7 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
             {/* Cards — flat carousel */}
             <div className="relative flex-1" style={{ height: '620px' }}>
               {(() => {
-                const ACTIVE_W = 280, ADJ_W = 220, FAR_W = 130, GAP = 16;
+                const ACTIVE_W = 290, ADJ_W = 225, FAR_W = 175, GAP = 12;
                 const planColor: Record<string, string> = {
                   free: 'text-slate-400', s: 'text-orange-400',
                   m: 'text-[#2DA6DD]',   l: 'text-red-400', pro: 'text-purple-400',
@@ -343,11 +349,16 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
                               {isTH ? 'ยอดนิยม' : 'Most Popular'}
                             </div>
                           )}
+                          {(plan.id === 'l' || plan.id === 'pro') && (
+                            <div className="bg-[#EC6F44] text-white text-xs font-bold text-center py-2">
+                              {isTH ? 'ครบทุกฟีเจอร์' : 'Full Features'}
+                            </div>
+                          )}
                           <div className="bg-[#131C45] px-6 pt-6 pb-5 text-center">
                             <div className={`font-black text-7xl leading-none mb-3 ${!gradientMap[plan.id] ? planColor[plan.id] : ''}`} style={letterStyle}>{plan.name}</div>
                             <div>
                               <span className="font-black text-white text-2xl">{plan.price === 0 ? (isTH ? 'ฟรี' : 'Free') : plan.price.toLocaleString()}</span>
-                              <span className="text-slate-400 text-xs ml-1">{plan.price === 0 ? (isTH ? 'ฟรี /เดือน' : 'forever') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
+                              <span className="text-white text-sm font-semibold ml-1">{plan.price === 0 ? (isTH ? '/เดือน' : 'forever') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
                             </div>
                           </div>
                           <div className="bg-white px-6 pt-5 pb-6 space-y-3">
@@ -366,7 +377,7 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
                               </div>
                             )}
                             <button
-                              onClick={e => { e.stopPropagation(); setCurrentPage('packages'); }}
+                              onClick={e => { e.stopPropagation(); onSelectPackage(plan.id); }}
                               className="mt-3 w-full py-4 rounded-xl bg-[#EC6F44] hover:bg-orange-500 text-white font-bold text-base transition-colors cursor-pointer"
                             >
                               {isTH ? 'รายละเอียด' : 'Details'}
@@ -376,11 +387,21 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
                       ) : isAdjacent ? (
                         /* ── Adjacent: dark top + white bottom ── */
                         <>
+                          {plan.id === 'm' && (
+                            <div className="bg-[#2DA6DD] text-white text-[10px] font-bold text-center py-1.5">
+                              {isTH ? 'ยอดนิยม' : 'Most Popular'}
+                            </div>
+                          )}
+                          {(plan.id === 'l' || plan.id === 'pro') && (
+                            <div className="bg-[#EC6F44] text-white text-[10px] font-bold text-center py-1.5">
+                              {isTH ? 'ครบทุกฟีเจอร์' : 'Full Features'}
+                            </div>
+                          )}
                           <div className="bg-[#131C45] px-5 pt-6 pb-5 text-center">
                             <div className={`font-black text-4xl leading-none mb-2 ${!gradientMap[plan.id] ? planColor[plan.id] : ''}`} style={letterStyle}>{plan.name}</div>
                             <div>
                               <span className="font-black text-white text-base">{plan.price === 0 ? (isTH ? 'ฟรี' : 'Free') : plan.price.toLocaleString()}</span>
-                              <span className="text-slate-400 text-xs ml-1">{plan.price === 0 ? (isTH ? 'ฟรี /เดือน' : 'forever') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
+                              <span className="text-slate-400 text-xs ml-1">{plan.price === 0 ? (isTH ? '/เดือน' : 'forever') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
                             </div>
                           </div>
                           <div className="bg-white px-4 pt-4 pb-5 space-y-2.5">
@@ -401,21 +422,42 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
                           </div>
                         </>
                       ) : (
-                        /* ── Far: all gray, icons only ── */
-                        <div className="bg-slate-200 p-4 text-center">
-                          <div className={`font-black text-2xl leading-none mb-1 ${!gradientMap[plan.id] ? planColor[plan.id] : ''}`} style={letterStyle}>{plan.name}</div>
-                          <div className="mb-4">
-                            <span className="text-xs font-bold text-slate-500">{plan.price === 0 ? (isTH ? 'ฟรี' : 'Free') : plan.price.toLocaleString()}</span>
-                            <span className="text-[10px] text-slate-400 ml-0.5">{plan.price === 0 ? (isTH ? ' /เดือน' : '') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
+                        /* ── Far: dark top + white bottom, with text ── */
+                        <>
+                          {plan.id === 'm' && (
+                            <div className="bg-[#2DA6DD] text-white text-[10px] font-bold text-center py-1.5">
+                              {isTH ? 'ยอดนิยม' : 'Most Popular'}
+                            </div>
+                          )}
+                          {(plan.id === 'l' || plan.id === 'pro') && (
+                            <div className="bg-[#EC6F44] text-white text-[10px] font-bold text-center py-1.5">
+                              {isTH ? 'ครบทุกฟีเจอร์' : 'Full Features'}
+                            </div>
+                          )}
+                          <div className="bg-[#131C45] px-3 pt-5 pb-4 text-center">
+                            <div className={`font-black text-3xl leading-none mb-1.5 ${!gradientMap[plan.id] ? planColor[plan.id] : ''}`} style={letterStyle}>{plan.name}</div>
+                            <div>
+                              <span className="font-black text-white text-sm">{plan.price === 0 ? (isTH ? 'ฟรี' : 'Free') : plan.price.toLocaleString()}</span>
+                              <span className="text-slate-400 text-[10px] ml-0.5">{plan.price === 0 ? (isTH ? ' /เดือน' : '') : (isTH ? ' บาท/เดือน' : ' ฿/mo')}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-center gap-2">
-                            {plan.features.slice(0, 4).map((feat, fIdx) => (
-                              <div key={fIdx} className={`w-5 h-5 rounded-full flex items-center justify-center ${feat.available ? 'bg-[#2DA6DD]' : 'bg-red-400'}`}>
-                                {feat.available ? <Check className="w-3 h-3 text-white" /> : <X className="w-3 h-3 text-white" />}
+                          <div className="bg-white px-3 pt-3 pb-4 space-y-2">
+                            {boolFeatures.slice(0, 6).map((feat, fIdx) => (
+                              <div key={fIdx} className="flex items-center gap-1.5">
+                                <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${feat.available ? 'bg-[#2DA6DD]' : 'bg-red-500'}`}>
+                                  {feat.available ? <Check className="w-2.5 h-2.5 text-white" /> : <X className="w-2.5 h-2.5 text-white" />}
+                                </div>
+                                <span className="text-[10px] text-slate-700 leading-tight">{feat.text}</span>
                               </div>
                             ))}
+                            {lastFeature && (
+                              <div className="flex items-center gap-1.5 text-slate-500 text-[10px] pl-0.5">
+                                <span className="text-xs leading-none">•</span>
+                                <span>{lastFeature.text}</span>
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        </>
                       )}
                     </motion.div>
                   );
@@ -449,80 +491,29 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
       {/* ── 6. Products ── */}
       <section className="py-16 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-center text-slate-900 mb-12">
+          <h2 className="text-3xl font-extrabold text-center text-[#2DA6DD] mb-12">
             {isTH ? 'สินค้าของเรา' : 'Our Products'}
           </h2>
 
           <div className="grid grid-cols-3 gap-6 mb-10">
-            {/* Drawer only */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-10 flex items-center justify-center min-h-[200px]">
-              <div className="w-36">
-                <div className="w-full h-12 bg-slate-800 rounded-t-lg shadow-md relative">
-                  <div className="absolute top-1.5 left-3 right-3 h-5 bg-slate-950 rounded-xs border-b border-slate-700 flex items-center justify-around px-2">
-                    <div className="w-6 h-3 bg-orange-200/30 rounded-xs border border-orange-200/20 text-[5px] text-center text-slate-400">1000฿</div>
-                    <div className="w-6 h-3 bg-green-200/30 rounded-xs text-[5px] text-center text-slate-400">500฿</div>
-                  </div>
-                </div>
-                <div className="w-full h-12 bg-slate-700 rounded-b-lg shadow-md border-t border-slate-600 flex items-center justify-around px-4">
-                  <div className="w-5 h-5 rounded-full bg-slate-300 flex items-center justify-center text-[7px] font-bold text-slate-800 shadow-inner">10฿</div>
-                  <div className="w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center text-[7px] font-bold text-slate-800 shadow-inner">5฿</div>
-                  <div className="w-3 h-3 rounded-full bg-slate-900 border border-slate-500" />
-                </div>
-              </div>
-            </div>
-
-            {/* POS terminal + drawer */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-8 flex items-center justify-center min-h-[200px]">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-40 h-28 bg-slate-900 rounded-xl p-1.5 border-2 border-slate-700 shadow-xl">
-                  <div className="w-full h-full bg-blue-600 rounded-lg relative overflow-hidden">
-                    <div className="p-1.5 flex justify-between items-center border-b border-white/20">
-                      <span className="text-[6px] text-white font-mono">GrowStore Terminal</span>
-                      <span className="text-[6px] text-green-300 font-bold">● LIVE</span>
-                    </div>
-                    <div className="p-1.5 grid grid-cols-3 gap-1 mt-1">
-                      {['🥤', '🍞', '🥔', '🥛', '☕', '💧'].map((e, i) => (
-                        <div key={i} className="bg-white/10 rounded p-1 text-center text-xs">{e}</div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="w-3 h-4 bg-slate-600" />
-                <div className="w-20 h-2 bg-slate-700 rounded-full" />
-                <div className="w-36 mt-1">
-                  <div className="w-full h-10 bg-slate-800 rounded-t-lg">
-                    <div className="mx-2 mt-1.5 h-4 bg-slate-950 rounded-xs border-b border-slate-700" />
-                  </div>
-                  <div className="w-full h-10 bg-slate-700 rounded-b-lg border-t border-slate-600" />
-                </div>
-              </div>
+              <img src={imgS1} alt="Product 1" className="max-h-40 w-auto object-contain" />
             </div>
-
-            {/* Drawer variant */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-10 flex items-center justify-center min-h-[200px]">
-              <div className="w-36">
-                <div className="w-full h-12 bg-slate-800 rounded-t-lg shadow-md relative">
-                  <div className="absolute top-1.5 left-3 right-3 h-5 bg-slate-950 rounded-xs border-b border-slate-700 flex items-center justify-around px-2">
-                    <div className="w-6 h-3 bg-blue-200/30 rounded-xs text-[5px] text-center text-slate-400">50฿</div>
-                    <div className="w-6 h-3 bg-green-200/30 rounded-xs text-[5px] text-center text-slate-400">100฿</div>
-                  </div>
-                </div>
-                <div className="w-full h-12 bg-slate-700 rounded-b-lg shadow-md border-t border-slate-600 flex items-center justify-around px-4">
-                  <div className="w-5 h-5 rounded-full bg-orange-400 flex items-center justify-center text-[7px] font-bold text-slate-800 shadow-inner">2฿</div>
-                  <div className="w-5 h-5 rounded-full bg-yellow-300 flex items-center justify-center text-[7px] font-bold text-slate-800 shadow-inner">1฿</div>
-                  <div className="w-3 h-3 rounded-full bg-slate-900 border border-slate-500" />
-                </div>
-              </div>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-8 flex items-center justify-center min-h-[200px]">
+              <img src={imgS2} alt="Product 2" className="max-h-40 w-auto object-contain" />
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-8 flex items-center justify-center min-h-[200px]">
+              <img src={imgS3} alt="Product 3" className="max-h-40 w-auto object-contain" />
             </div>
           </div>
 
           <div className="text-center space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">
+            <h3 className="text-xl font-bold text-[#131C45]">
               {isTH ? 'ลิ้นชักเก็บเงินอัตโนมัติ 2 ชั้น' : 'Automatic Dual-Tier Cash Drawer'}
             </h3>
             <button
               onClick={() => setCurrentPage('products')}
-              className="px-7 py-3 rounded-full border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-bold text-sm transition-colors cursor-pointer"
+              className="px-8 py-3 rounded-[15px] border-2 border-[#EC6F44] text-[#EC6F44] font-bold text-sm bg-white hover:bg-[#EC6F44] hover:text-white transition-colors cursor-pointer mx-auto"
             >
               {isTH ? 'เรียนรู้เพิ่มเติม' : 'Learn More'}
             </button>
@@ -531,83 +522,74 @@ export default function HomeView({ setCurrentPage, language }: HomeViewProps) {
       </section>
 
       {/* ── 7. Multi-device ── */}
-      <section className="bg-slate-900 py-16">
+      <section className="bg-[#131C45] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-center text-white mb-12">
-            {isTH ? 'การใช้งานในระบบต่างๆ' : 'Works Across All Platforms'}
+          <h2 className="text-3xl font-extrabold text-center mb-12">
+            <span className="text-[#2DA6DD]">{isTH ? 'การใช้งาน' : 'Works'}</span>
+            <span className="text-white">{isTH ? 'ในระบบต่างๆ' : ' Across All Platforms'}</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
-            {/* Mobile */}
-            <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-4">
-              <div className="w-28 h-48 bg-slate-900 rounded-3xl p-2 border-4 border-slate-700 shadow-xl relative">
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-2.5 bg-slate-900 rounded-full z-10" />
-                <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex flex-col items-center justify-center gap-2 pt-3">
-                  <Smartphone className="w-7 h-7 text-white/80" />
-                  <span className="text-white text-[10px] font-bold">GrowStore</span>
-                  <div className="grid grid-cols-2 gap-1 w-full px-3 mt-1">
-                    {['🏪', '📊', '📦', '⚙️'].map((ic, i) => (
-                      <div key={i} className="bg-white/10 rounded-lg p-1.5 flex items-center justify-center text-xs">{ic}</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-5">
-                <span className="text-sm font-semibold text-slate-600">Android</span>
-                <span className="text-sm font-semibold text-slate-600">iOS</span>
-              </div>
-              <h3 className="font-bold text-slate-900">{isTH ? 'มือถือ' : 'Mobile'}</h3>
-            </div>
+          {(() => {
+            const AndroidIcon = () => (
+              <svg viewBox="0 0 24 24" className="w-9 h-9" fill="#3DDC84">
+                <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5S11 23.33 11 22.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.84 5.84 0 0 0 12 1c-1.1 0-2.15.23-3.12.63L7.4.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.3 1.3C6.14 3.07 5 5.16 5 7.5L5 8h14v-.5c0-2.34-1.14-4.43-2.97-5.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
+              </svg>
+            );
+            const AppleIcon = () => (
+              <svg viewBox="0 0 24 24" className="w-8 h-8" fill="#1d1d1f">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+            );
+            const WindowsIcon = () => (
+              <svg viewBox="0 0 20 20" className="w-9 h-9">
+                <path fill="#F35325" d="M1 1h8.5v8.5H1z"/>
+                <path fill="#81BC06" d="M10.5 1H19v8.5h-8.5z"/>
+                <path fill="#05A6F0" d="M1 10.5h8.5V19H1z"/>
+                <path fill="#FFBA08" d="M10.5 10.5H19V19h-8.5z"/>
+              </svg>
+            );
+            return (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-            {/* Tablet */}
-            <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-4">
-              <div className="w-52 h-40 bg-slate-900 rounded-2xl p-2 border-4 border-slate-700 shadow-xl relative">
-                <div className="absolute top-1/2 right-1 -translate-y-1/2 w-1 h-8 bg-slate-600 rounded-full" />
-                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex flex-col items-center justify-center gap-2">
-                  <Tablet className="w-7 h-7 text-white/80" />
-                  <span className="text-white text-[10px] font-bold">GrowStore</span>
-                  <div className="grid grid-cols-3 gap-1 w-full px-4 mt-1">
-                    {['🏪', '📊', '📦'].map((ic, i) => (
-                      <div key={i} className="bg-white/10 rounded p-1.5 flex items-center justify-center text-xs">{ic}</div>
-                    ))}
+                {/* ── มือถือ ── */}
+                <div className="bg-white rounded-2xl p-5 flex flex-col items-center gap-5">
+                  <div className="flex items-center justify-center" style={{ height: 160 }}>
+                    <img src={imgF1} alt="มือถือ" className="max-h-40 w-auto object-contain" />
                   </div>
+                  <div className="flex items-center gap-5"><AndroidIcon /><AppleIcon /></div>
+                  <p className="font-bold text-slate-800 text-sm">{isTH ? 'มือถือ' : 'Mobile'}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-5">
-                <span className="text-sm font-semibold text-slate-600">Android</span>
-                <span className="text-sm font-semibold text-slate-600">Apple</span>
-              </div>
-              <h3 className="font-bold text-slate-900">{isTH ? 'แท็บเล็ต' : 'Tablet'}</h3>
-            </div>
 
-            {/* Desktop */}
-            <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-4">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-52 h-36 bg-slate-900 rounded-xl p-1.5 border-2 border-slate-700 shadow-xl">
-                  <div className="w-full h-full bg-slate-800 rounded-lg flex flex-col overflow-hidden">
-                    <div className="flex items-center gap-1 px-2 py-1 border-b border-slate-700 flex-shrink-0">
-                      <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                      <span className="text-[7px] text-slate-400 ml-1 font-mono">GrowStore POS</span>
-                    </div>
-                    <div className="flex-1 p-2 grid grid-cols-4 gap-1">
-                      {['🏪', '📊', '📦', '👥', '⚙️', '🛒', '📈', '💰'].map((ic, i) => (
-                        <div key={i} className="bg-slate-600/50 rounded p-1 flex items-center justify-center text-xs">{ic}</div>
-                      ))}
-                    </div>
+                {/* ── แท็บเล็ต ── */}
+                <div className="bg-white rounded-2xl p-5 flex flex-col items-center gap-5">
+                  <div className="flex items-center justify-center" style={{ height: 160 }}>
+                    <img src={imgF2} alt="แท็บเล็ต" className="max-h-40 w-auto object-contain" />
                   </div>
+                  <div className="flex items-center gap-5"><AndroidIcon /><AppleIcon /></div>
+                  <p className="font-bold text-slate-800 text-sm">{isTH ? 'แท็บเล็ต' : 'Tablet'}</p>
                 </div>
-                <div className="w-3 h-5 bg-slate-500 rounded-sm" />
-                <div className="w-20 h-2 bg-slate-600 rounded-full" />
+
+                {/* ── เดสก์ท็อป ── */}
+                <div className="bg-white rounded-2xl p-5 flex flex-col items-center gap-5">
+                  <div className="flex items-center justify-center" style={{ height: 160 }}>
+                    <img src={imgF3} alt="เดสก์ท็อป" className="max-h-40 w-auto object-contain" />
+                  </div>
+                  <div className="flex items-center gap-5"><WindowsIcon /><AppleIcon /></div>
+                  <p className="font-bold text-slate-800 text-sm">{isTH ? 'เดสก์ท็อป' : 'Desktop'}</p>
+                </div>
+
+                {/* ── เว็บเบราว์เซอร์ ── */}
+                <div className="bg-white rounded-2xl p-5 flex flex-col items-center gap-5">
+                  <div className="flex items-center justify-center" style={{ height: 160 }}>
+                    <img src={imgF4} alt="คี-ออส" className="max-h-40 w-auto object-contain" />
+                  </div>
+                  <div className="flex items-center gap-5"><WindowsIcon /><AppleIcon /></div>
+                  <p className="font-bold text-slate-800 text-sm">{isTH ? 'คี-ออส' : 'Kiosk'}</p>
+                </div>
+
               </div>
-              <div className="flex items-center gap-5">
-                <span className="text-sm font-semibold text-slate-600">Windows</span>
-                <span className="text-sm font-semibold text-slate-600">macOS</span>
-              </div>
-              <h3 className="font-bold text-slate-900">{isTH ? 'เดสก์ท็อป' : 'Desktop'}</h3>
-            </div>
-          </div>
+            );
+          })()}
         </div>
       </section>
 
