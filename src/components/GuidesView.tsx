@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ChevronRight, ChevronLeft, Search, Play, Clock, TrendingUp, ShoppingBag, Receipt, Package, Truck, RotateCcw, Wrench, Wallet, ChartColumn, LucideIcon } from 'lucide-react';
-import banner44 from '../../images/banner444.png';
 
 interface VideoCategory {
   id: string;
@@ -254,8 +253,11 @@ function VideoGallery({ isTH }: { isTH: boolean }) {
 
             return (
               <div key={cat.id} className="space-y-3">
-                <h3 className="text-xl font-bold text-[#2DA6DD]">
+                <h3 className="text-xl font-bold text-[#2DA6DD] flex items-baseline gap-2">
                   {isTH ? cat.titleTH : cat.titleEN}
+                  <span className="text-sm font-medium text-slate-400">
+                    {isTH ? `มีทั้งหมด ${cat.videos.length} รายการ` : `${cat.videos.length} videos`}
+                  </span>
                 </h3>
                 {isFiltered ? (
                   /* Grid — no arrows */
@@ -329,6 +331,41 @@ function VideoGallery({ isTH }: { isTH: boolean }) {
   );
 }
 
+const ARTICLES = [
+  { titleTH: 'วิธีเริ่มต้นใช้งาน GrowStore POS',        titleEN: 'Getting Started with GrowStore POS',     descTH: 'แนะนำการติดตั้งและตั้งค่าระบบ POS สำหรับร้านค้าขนาดเล็กถึงกลาง เพื่อเริ่มต้นขายได้ทันที', descEN: 'Step-by-step guide to set up GrowStore POS for small to mid-sized stores.', date: '01 มิ.ย. 68', readMin: 5 },
+  { titleTH: 'เพิ่มยอดขายด้วยโปรโมชั่นใน GrowStore',   titleEN: 'Boost Sales with GrowStore Promotions',   descTH: 'เรียนรู้การสร้างโปรโมชั่นและส่วนลดหลากหลายรูปแบบเพื่อดึงดูดลูกค้าและเพิ่มรายได้', descEN: 'Learn how to create discounts and promotions to attract more customers.', date: '15 พ.ค. 68', readMin: 4 },
+  { titleTH: 'จัดการสต็อกสินค้าอย่างมีประสิทธิภาพ',     titleEN: 'Manage Inventory Efficiently',            descTH: 'เทคนิคการตรวจนับและอัปเดตสต็อกสินค้าให้ถูกต้องแม่นยำ ลดปัญหาสินค้าขาดหรือล้นสต็อก', descEN: 'Tips and tricks for accurate stock counting and inventory updates.', date: '02 พ.ค. 68', readMin: 6 },
+  { titleTH: 'ทำความรู้จักกับรายงานการขาย',               titleEN: 'Understanding Sales Reports',             descTH: 'อ่านและวิเคราะห์รายงานการขายเพื่อตัดสินใจทางธุรกิจได้อย่างชาญฉลาดและทันเวลา', descEN: 'Read and analyze sales reports to make smarter business decisions.', date: '20 เม.ย. 68', readMin: 7 },
+  { titleTH: 'ระบบชำระเงินหลายช่องทางของ GrowStore',     titleEN: 'Multi-Channel Payments in GrowStore',     descTH: 'GrowStore รองรับการรับชำระผ่านเงินสด บัตร QR Code และพร้อมเพย์ ครบจบในที่เดียว', descEN: 'GrowStore supports cash, card, QR Code, and PromptPay in one system.', date: '10 เม.ย. 68', readMin: 3 },
+  { titleTH: 'ตั้งค่าผู้ใช้งานและสิทธิ์การเข้าถึง',       titleEN: 'User Roles & Access Permissions',         descTH: 'กำหนดสิทธิ์การใช้งานให้พนักงานแต่ละคนได้อย่างละเอียด เพื่อความปลอดภัยของข้อมูลร้าน', descEN: 'Assign detailed access permissions to each staff member for data security.', date: '01 เม.ย. 68', readMin: 5 },
+];
+
+function ArticleGrid({ isTH }: { isTH: boolean }) {
+  return (
+    <div className="max-w-5xl mx-auto px-6">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-[#2DA6DD]">{isTH ? 'บทความ' : 'Articles'}</h2>
+        <p className="text-sm text-slate-400">{isTH ? `ทั้งหมด ${ARTICLES.length} รายการ` : `${ARTICLES.length} articles`}</p>
+      </div>
+      <div className="grid grid-cols-3 gap-5">
+        {ARTICLES.map((article, i) => (
+          <div key={i} className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col cursor-pointer hover:shadow-md transition-shadow">
+            <div className="aspect-video bg-slate-100" />
+            <div className="p-4 flex flex-col flex-1">
+              <p className="text-base font-bold text-slate-800 leading-snug mb-1">{isTH ? article.titleTH : article.titleEN}</p>
+              <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">{isTH ? article.descTH : article.descEN}</p>
+              <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100">
+                <span className="text-xs text-slate-400">{article.date}</span>
+                <span className="text-xs text-slate-400">{isTH ? `อ่าน ${article.readMin} นาที` : `${article.readMin} min read`}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 interface GuidesViewProps {
   language: 'TH' | 'EN';
 }
@@ -356,44 +393,34 @@ export default function GuidesView({ language }: GuidesViewProps) {
   return (
     <div>
 
-      {/* Hero Banner */}
-      <section className="relative">
-        <img src={banner44} alt="GrowStore Banner" className="w-full object-cover" style={{ height: 500 }} />
-        <div className="absolute inset-0 flex flex-col justify-center" style={{ paddingLeft: '38%' }}>
-          <p className="font-black drop-shadow-lg text-[#30A4DD] text-8xl" style={{ marginBottom: '0.3em', marginLeft: '-2rem' }}>
-            {isTH ? 'มารู้จัก' : 'Discover'}
-          </p>
-          <p className="font-black drop-shadow-lg text-8xl" style={{ marginLeft: '2rem' }}>
-            <span className="text-[#131C45]">Grow</span>
-            <span className="text-[#2DA6DD]">Store</span>
-            {isTH && <span className="text-[#131C45]"> กัน</span>}
-          </p>
-        </div>
-      </section>
-
-      {/* Tabs + Content */}
-      <section className="pb-16" style={{ background: '#F9F9F9' }}>
-
-        {/* Tab bar */}
-        <div className="flex justify-center gap-4 py-8 px-4 flex-wrap">
+      {/* Tab bar */}
+      <section className="bg-[#131C45] py-6">
+        <div className="flex justify-center gap-4 px-4 flex-wrap">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="px-8 py-3 rounded-xl font-bold text-sm cursor-pointer transition-all"
-              style={
+              className={`px-8 py-3 rounded-xl font-bold text-sm cursor-pointer transition-all ${
                 activeTab === tab.id
-                  ? { background: '#EC6F44', color: '#fff', border: '2px solid #EC6F44' }
-                  : { background: 'transparent', color: '#EC6F44', border: '2px solid #EC6F44' }
-              }
+                  ? 'bg-[#EC6F44] text-white'
+                  : 'bg-white text-[#EC6F44] hover:bg-[#FEE4DC]'
+              }`}
             >
               {isTH ? tab.labelTH : tab.labelEN}
             </button>
           ))}
         </div>
+      </section>
+
+      {/* Content */}
+      <section className="pb-16 pt-8" style={{ background: '#F9F9F9' }}>
 
         {/* Content */}
-        {activeTab !== 'video' ? (
+        {activeTab === 'video' ? (
+          <VideoGallery isTH={isTH} />
+        ) : activeTab === 'article' ? (
+          <ArticleGrid isTH={isTH} />
+        ) : (
           <div className="max-w-3xl mx-auto px-6 space-y-6">
             <p className="text-[#2DA6DD] text-center font-bold text-xl">
               {isTH ? contentTitle[activeTab].th : contentTitle[activeTab].en}
@@ -410,8 +437,6 @@ export default function GuidesView({ language }: GuidesViewProps) {
               />
             </div>
           </div>
-        ) : (
-          <VideoGallery isTH={isTH} />
         )}
 
       </section>
