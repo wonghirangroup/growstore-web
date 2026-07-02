@@ -55,8 +55,8 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
     {
       image: banner1,
       title: isTH
-        ? <>ระบบ <span className="text-[#30A4DD]">POS</span> ที่ออกแบบมาเพื่อธุรกิจของคุณ</>
-        : <>The <span className="text-[#30A4DD]">POS</span> System Designed for Your Business</>,
+        ? <>ระบบ <span className="text-[#2DA6DD]">POS</span> ที่ออกแบบมาเพื่อธุรกิจของคุณ</>
+        : <>The <span className="text-[#2DA6DD]">POS</span> System Designed for Your Business</>,
       desc: isTH
         ? 'ตอบโจทย์ตั้งแต่ร้านเบ็ดเตล็ดไปจนถึงคลังสินค้าขนาดใหญ่ จัดการหน้าร้านและคุมสต็อกได้อย่างแม่นยำ ครบจบในระบบเดียว'
         : 'Answers everything from small stores to large warehouses. Manage storefronts & stock accurately in one system.',
@@ -229,7 +229,7 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
       <section className="bg-[#131C45] py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <h2 className="text-3xl font-extrabold text-center text-white">
-            {isTH ? <>ความสามารถของ<span className="text-[#30A4DD]">ระบบ</span></> : 'System Capabilities'}
+            {isTH ? <>ความสามารถของ<span className="text-[#2DA6DD]">ระบบ</span></> : 'System Capabilities'}
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {[  

@@ -209,8 +209,8 @@ function VideoGallery({ isTH }: { isTH: boolean }) {
               onClick={() => setSelectedFilter('all')}
               className={`w-full text-center px-4 py-2 rounded-lg text-sm font-black cursor-pointer transition-colors ${
                 selectedFilter === 'all'
-                  ? 'bg-[#30A4DD] text-white'
-                  : 'text-[#131C45] hover:text-[#30A4DD] hover:bg-[#30A4DD]/10'
+                  ? 'bg-[#2DA6DD] text-white'
+                  : 'text-[#131C45] hover:text-[#2DA6DD] hover:bg-[#2DA6DD]/10'
               }`}
             >
               {isTH ? 'ทั้งหมด' : 'All'}
@@ -225,8 +225,8 @@ function VideoGallery({ isTH }: { isTH: boolean }) {
                 onClick={() => setSelectedFilter(prev => prev === item.id ? 'all' : item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-2 cursor-pointer transition-colors rounded-lg ${
                   selectedFilter === item.id
-                    ? 'bg-[#30A4DD] text-white'
-                    : 'text-[#131C45] hover:text-[#30A4DD] hover:bg-[#30A4DD]/10'
+                    ? 'bg-[#2DA6DD] text-white'
+                    : 'text-[#131C45] hover:text-[#2DA6DD] hover:bg-[#2DA6DD]/10'
                 }`}
               >
                 <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">

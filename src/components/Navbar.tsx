@@ -245,7 +245,7 @@ export default function Navbar({
             {/* Login */}
             <button
               onClick={onOpenLogin}
-              className="flex items-center space-x-1 px-4 py-2 rounded-full bg-[#30A4DD] hover:bg-[#30A4DD] text-white text-xs font-bold shadow-md shadow-blue-100 hover:shadow-lg hover:shadow-blue-200 transition-all cursor-pointer"
+              className="flex items-center space-x-1 px-4 py-2 rounded-full bg-[#2DA6DD] hover:bg-[#2DA6DD] text-white text-xs font-bold shadow-md shadow-blue-100 hover:shadow-lg hover:shadow-blue-200 transition-all cursor-pointer"
               id="login-btn"
             >
               <LogIn className="w-3.5 h-3.5" />
