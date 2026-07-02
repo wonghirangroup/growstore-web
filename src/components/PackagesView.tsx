@@ -142,7 +142,8 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
             return (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
                 {PRICING_PLANS.map((plan, idx) => {
-                  const isActive = hoveredIdx >= 0 ? idx === hoveredIdx : idx === activePlanIdx;
+                  const isHovered = idx === hoveredIdx;
+                  const isActive = idx === activePlanIdx;
                   const boolFeatures = plan.features.slice(0, plan.features.length - 1);
                   const lastFeature = plan.features[plan.features.length - 1];
                   const letterStyle = gradientMap[plan.id] ? {
@@ -154,11 +155,15 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
                   return (
                     <motion.div
                       key={plan.id}
+                      onClick={() => setActivePlanIdx(idx)}
                       onMouseEnter={() => setHoveredIdx(idx)}
                       onMouseLeave={() => setHoveredIdx(-1)}
-                      animate={{ boxShadow: isActive ? planShadow[plan.id] : '0 2px 8px rgba(0,0,0,0.08)', scale: isActive ? 1.03 : 1 }}
+                      animate={{
+                        boxShadow: (isActive || isHovered) ? planShadow[plan.id] : '0 2px 8px rgba(0,0,0,0.08)',
+                        scale: isActive ? 1.05 : isHovered ? 1.03 : 1,
+                      }}
                       transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="rounded-2xl overflow-hidden flex flex-col"
+                      className="rounded-2xl overflow-hidden flex flex-col cursor-pointer"
                     >
                       {/* Badge */}
                       {plan.id === 'm' && (
