@@ -49,6 +49,7 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
 
   const initialIdx = PRICING_PLANS.findIndex(p => p.id === (initialHighlight ?? 'm'));
   const [activePlanIdx, setActivePlanIdx] = useState(initialIdx >= 0 ? initialIdx : 2);
+  const [hoveredIdx, setHoveredIdx] = useState(-1);
 
   // State for expanded accordions
   const [expandedIndices, setExpandedIndices] = useState<number[]>([]);
@@ -122,26 +123,26 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
 
           {(() => {
             const planColor: Record<string, string> = {
-              free: 'text-slate-400', s: 'text-orange-400',
-              m: 'text-[#2DA6DD]', l: 'text-red-400', pro: 'text-purple-400',
+              free: 'text-slate-400', s: 'text-purple-400',
+              m: 'text-[#2DA6DD]', l: 'text-red-400', pro: 'text-orange-400',
             };
             const planShadow: Record<string, string> = {
               free: '0 16px 48px rgba(148,163,184,0.55)',
-              s: '0 16px 48px rgba(251,146,60,0.55)',
+              s: '0 16px 48px rgba(192,132,252,0.55)',
               m: '0 16px 48px rgba(45,166,221,0.55)',
               l: '0 16px 48px rgba(248,113,113,0.55)',
-              pro: '0 16px 48px rgba(192,132,252,0.55)',
+              pro: '0 16px 48px rgba(251,146,60,0.55)',
             };
             const gradientMap: Record<string, string> = {
               m: 'linear-gradient(160deg, #2DA6DD, #2F45AB)',
-              s: 'linear-gradient(160deg, #FAFE8C, #C36345)',
+              s: 'linear-gradient(160deg, #6A6ED2, #E33368)',
               l: 'linear-gradient(160deg, #CA3F42, #E37633)',
-              pro: 'linear-gradient(160deg, #6A6ED2, #E33368)',
+              pro: 'linear-gradient(160deg, #FAFE8C, #C36345)',
             };
             return (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
                 {PRICING_PLANS.map((plan, idx) => {
-                  const isActive = idx === activePlanIdx;
+                  const isActive = hoveredIdx >= 0 ? idx === hoveredIdx : idx === activePlanIdx;
                   const boolFeatures = plan.features.slice(0, plan.features.length - 1);
                   const lastFeature = plan.features[plan.features.length - 1];
                   const letterStyle = gradientMap[plan.id] ? {
@@ -153,10 +154,11 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
                   return (
                     <motion.div
                       key={plan.id}
-                      onClick={() => setActivePlanIdx(idx)}
+                      onMouseEnter={() => setHoveredIdx(idx)}
+                      onMouseLeave={() => setHoveredIdx(-1)}
                       animate={{ boxShadow: isActive ? planShadow[plan.id] : '0 2px 8px rgba(0,0,0,0.08)', scale: isActive ? 1.03 : 1 }}
                       transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="rounded-2xl overflow-hidden cursor-pointer flex flex-col"
+                      className="rounded-2xl overflow-hidden flex flex-col"
                     >
                       {/* Badge */}
                       {plan.id === 'm' && (
@@ -233,16 +235,16 @@ export default function PackagesView({ language, setCurrentPage, onSetDemoPlan, 
         {(() => {
           const gradientMap: Record<string, string> = {
             m: 'linear-gradient(160deg, #2DA6DD, #2F45AB)',
-            s: 'linear-gradient(160deg, #FAFE8C, #C36345)',
+            s: 'linear-gradient(160deg, #6A6ED2, #E33368)',
             l: 'linear-gradient(160deg, #CA3F42, #E37633)',
-            pro: 'linear-gradient(160deg, #6A6ED2, #E33368)',
+            pro: 'linear-gradient(160deg, #FAFE8C, #C36345)',
           };
           const planAccentColor: Record<string, string> = {
-            free: '#94A3B8', s: '#FB923C', m: '#2DA6DD', l: '#F87171', pro: '#C084FC',
+            free: '#94A3B8', s: '#C084FC', m: '#2DA6DD', l: '#F87171', pro: '#FB923C',
           };
           const planCellRgba: Record<string, string> = {
-            free: 'rgba(148,163,184,0.15)', s: 'rgba(251,146,60,0.15)',
-            m: 'rgba(45,166,221,0.15)', l: 'rgba(248,113,113,0.15)', pro: 'rgba(192,132,252,0.15)',
+            free: 'rgba(148,163,184,0.15)', s: 'rgba(192,132,252,0.15)',
+            m: 'rgba(45,166,221,0.15)', l: 'rgba(248,113,113,0.15)', pro: 'rgba(251,146,60,0.15)',
           };
           const hlCell = (id: string) => highlightedPlanId === id ? { backgroundColor: planCellRgba[id] } : {};
           const catIconMap: Record<string, React.ReactElement> = {

@@ -30,16 +30,17 @@ export default function ServicesView({ language }: ServicesViewProps) {
           {isTH ? 'วิธีใช้งาน' : 'How to Use'}
         </h2>
 
-        {/* Video placeholder */}
-        <div
-          className="w-full rounded-2xl bg-slate-200 flex items-center justify-center cursor-pointer"
-          style={{ aspectRatio: '16/9' }}
-        >
-          <div className="w-14 h-14 rounded-full border-2 border-[#131C45] flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#131C45] ml-0.5">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
+        {/* YouTube embed */}
+        <div className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
+          <iframe
+            src="https://www.youtube.com/embed/JCGLR8AJOiI"
+            title="GrowStore Product Video"
+            width="100%"
+            height="100%"
+            style={{ border: 0, display: 'block' }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
       </section>
 

@@ -109,23 +109,21 @@ export default function ProductsView({ language }: ProductsViewProps) {
       </section>
 
       {/* 2. Video section */}
-      <section className="bg-[#131C45] py-16">
+      <section className="bg-white py-16">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-4xl font-semibold text-center mb-8 text-white">
+          <h2 className="text-4xl font-semibold text-center mb-8 text-[#2DA6DD]">
             {isTH ? 'วีดีโอสินค้า' : 'Product Video'}
           </h2>
-          <div
-            className="rounded-2xl bg-black/40 border border-white/10 flex flex-col items-center justify-center gap-5"
-            style={{ aspectRatio: '16/9' }}
-          >
-            <div className="w-20 h-20 rounded-full bg-white/15 hover:bg-white/25 transition-colors flex items-center justify-center cursor-pointer">
-              <svg viewBox="0 0 24 24" className="w-10 h-10 fill-white ml-1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
-            <span className="text-white/50 text-sm tracking-wide">
-              {isTH ? 'วีดีโอสินค้า (เร็วๆ นี้)' : 'Product Video (Coming Soon)'}
-            </span>
+          <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
+            <iframe
+              src="https://www.youtube.com/embed/JCGLR8AJOiI"
+              title="GrowStore Product Video"
+              width="100%"
+              height="100%"
+              style={{ border: 0, display: 'block' }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         </div>
       </section>

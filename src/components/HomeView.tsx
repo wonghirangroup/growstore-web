@@ -290,15 +290,15 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
               {(() => {
                 const ACTIVE_W = 290, ADJ_W = 225, FAR_W = 175, GAP = 12;
                 const planColor: Record<string, string> = {
-                  free: 'text-slate-400', s: 'text-orange-400',
-                  m: 'text-[#2DA6DD]',   l: 'text-red-400', pro: 'text-purple-400',
+                  free: 'text-slate-400', s: 'text-purple-400',
+                  m: 'text-[#2DA6DD]',   l: 'text-red-400', pro: 'text-orange-400',
                 };
                 const planShadow: Record<string, string> = {
                   free: '0 24px 64px rgba(148,163,184,0.5)',
-                  s:    '0 24px 64px rgba(251,146,60,0.5)',
+                  s:    '0 24px 64px rgba(192,132,252,0.5)',
                   m:    '0 24px 64px rgba(45,166,221,0.5)',
                   l:    '0 24px 64px rgba(248,113,113,0.5)',
-                  pro:  '0 24px 64px rgba(192,132,252,0.5)',
+                  pro:  '0 24px 64px rgba(251,146,60,0.5)',
                 };
 
                 return PRICING_PLANS.map((plan, idx) => {
@@ -317,9 +317,9 @@ export default function HomeView({ setCurrentPage, language, onSelectPackage }: 
                   const lastFeature = plan.features[plan.features.length - 1];
                   const gradientMap: Record<string, string> = {
                     m: 'linear-gradient(160deg, #2DA6DD, #2F45AB)',
-                    s: 'linear-gradient(160deg, #FAFE8C, #C36345)',
+                    s: 'linear-gradient(160deg, #6A6ED2, #E33368)',
                     l: 'linear-gradient(160deg, #CA3F42, #E37633)',
-                    pro: 'linear-gradient(160deg, #6A6ED2, #E33368)',
+                    pro: 'linear-gradient(160deg, #FAFE8C, #C36345)',
                   };
                   const letterStyle = gradientMap[plan.id] ? {
                     background: gradientMap[plan.id],
